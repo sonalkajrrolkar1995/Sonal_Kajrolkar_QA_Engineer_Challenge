@@ -1,0 +1,16 @@
+{
+  "name": "qa-engineer-challenge",
+  "version": "1.0.0",
+  "description": "QA Engineer Challenge",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "report": "npx playwright show-report test-report"
+  },
+  "keywords": [],
+  "author": "Sonal Kajrolkar",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}
