@@ -1,0 +1,3137 @@
+{
+	"info": {
+		"_postman_id": "69e5c660-3254-4b8f-bd55-d44b68b48e50",
+		"name": "QA API Challenge - NeuroNation (Sonal Kajrolkar)",
+		"description": "Purpose-\n\nThis collection validates the complete API flow of the NeuroNation QA Challenge. It covers **authentication, product information, and order management** with positive, negative, and edge case scenarios. The goal is to ensure correctness, robustness, and security of the API under real-world and boundary conditions.\n\nStructure\n\n1. **Auth-**\n    \n    - Register new users\n        \n    - Handle invalid input, duplicate accounts, missing fields, and edge cases\n        \n    - Login with valid and invalid credentials\n        \n    - Verify token generation and error handling\n        \n2. **Product Information-**\n    \n    - Retrieve all products\n        \n    - Search by exact name, including URL-encoded and special characters\n        \n    - Get product by ID with valid, invalid, and edge case values\n        \n    - Validate product details: price, stock, description\n        \n3. **Order Information-**\n    \n\n- Create new orders with valid products\n    \n- Handle invalid product IDs, empty arrays, duplicates, and large lists\n    \n- Verify authorization with valid, missing, and invalid tokens\n    \n- Retrieve all orders for a user\n    \n- Get order by ID with positive, negative, and cross-user access scenarios\n    \n\nTest Coverage-\n\n- **Positive cases**: Confirm correct API behavior with valid input.\n    \n- **Negative cases**: Ensure proper error handling for invalid data, unauthorized access, and missing fields.\n    \n- **Edge cases**: Stress-test unusual but possible inputs (long strings, duplicates, empty arrays, special characters).\n    \n\nKey Findings-  \n• Data Integrity Issues: Negative stock values, missing price fields.  \n• Localization Bug: UTF‑8 search fails for product “Tastatür”.  \n• Validation Gaps: Registration accepts invalid emails and empty passwords; Login issues tokens for wrong credentials.  \n• Order Validation Flaws: Orders created with invalid product IDs or empty arrays.  \n• Security Risks: Cross‑user order access and non‑numeric order IDs returning fabricated data.  \n• Error Handling: Inconsistent responses (500 text/html instead of JSON).\n\nOutcome-\n\nThis collection demonstrates **end-to-end QA coverage** for a API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49544714",
+		"_collection_link": "https://sonalkajrolkar-6155173.postman.co/workspace/Personal-Workspace~8bd0b2e2-0f8a-4403-a4c4-a302fba0cef7/collection/49544714-69e5c660-3254-4b8f-bd55-d44b68b48e50?action=share&source=collection_link&creator=49544714"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"sonalkajrolkar@neuronation.com\",\r\n  \"password\": \"SK_NeuroNation9*\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/register",
+							"protocol": "https",
+							"host": [
+								"us-central1-nn-api-challenge",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Valid User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"sonalkajrolkar@neuronation.com\",\r\n  \"password\": \"SK_NeuroNation9*\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/register",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"1d-z8tsqeHKSxMH3B4Vf5lYTN+xWss\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "781d89ba4bd98ac219632a25df07c654;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 14:24:30 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "29"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User registered\"\n}"
+						},
+						{
+							"name": "Invalid Email Format (Negative)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"sonalkajrolkar_neuronation.com\",\r\n  \"password\": \"SK_NeuroNation9*\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/register",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"1d-z8tsqeHKSxMH3B4Vf5lYTN+xWss\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "f88772eefa547f9c98226f54c50fc193;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 14:28:24 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "29"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User registered\"\n}"
+						},
+						{
+							"name": "Duplicate Email (Negative)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"sonalkajrolkar@neuronation.com\",\r\n  \"password\": \"SK_NeuroNation9*\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/register",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"register"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"24-5B56xuvmw3IrU+e3WAtyoxowjFk\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "a9d982e58f17e8b7f06a6df1c6ad3721;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 16:54:48 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "36"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Email already registered\"\n}"
+						},
+						{
+							"name": "Very Long Password (Edge Case)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"sonal2026@neuronation.com\",\r\n  \"password\": \"SK_NeuroNation9*NeuroNation4982@232323223@232242444@gg6646NeuroNation\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/register",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"1d-z8tsqeHKSxMH3B4Vf5lYTN+xWss\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "8fd3f1de00820fb54476778a64bf5c87;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:00:12 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "29"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User registered\"\n}"
+						},
+						{
+							"name": "Missing Password (Negative)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"sonalkajrolkar8963@neuronation.com\",\r\n  \"password\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/register",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"1d-z8tsqeHKSxMH3B4Vf5lYTN+xWss\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "55f8053f6ba0db8a83a32e055d552854;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:06:00 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "29"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User registered\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"sonalkajrolkar@neuronation.com\",\r\n  \"password\": \"SK_NeuroNation9\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/login",
+							"protocol": "https",
+							"host": [
+								"us-central1-nn-api-challenge",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Valid Login Credentials",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"sonalkajrolkar@neuronation.com\",\r\n  \"password\": \"SK_NeuroNation9*\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/login",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"ac-pCjmQ3BuSCVU1UMqtg1yqkDd+jw\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "b9e47a9024162e889e653867947fc01d;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 14:33:42 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "172"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac\"\n}"
+						},
+						{
+							"name": "Valid Login For Wrong Email Address",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"sonalkajrolkar_neuronation.com\",\r\n  \"password\": \"SK_NeuroNation9*\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/login",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"ac-+cVZSiWodaFkXEIwsHanmzwoTKw\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "1e43025efc2006d30aea9d7312c4fdae;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 14:34:55 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "172"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyX25ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjg5NX0.wDjKItkceXE3poOB1qaG5eWzcVnWgk71xt_50RiNsX8\"\n}"
+						},
+						{
+							"name": "Wrong Password (Negative)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"sonalkajrolkar@neuronation.com\",\r\n  \"password\": \"7896123*\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/login",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"ac-l9SiXEew7AoWzi9iRUSNsbtmnxg\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "8078e904364ca60081f640e1e3fe244d;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:09:05 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "172"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQxMjE0NX0.bDWCpROhN5Ngz0BBgCWZi4YLnjJTSJ3urNHs-6NKUTU\"\n}"
+						},
+						{
+							"name": "Unregistered Email (Negative)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"omkar@neuronation.com\",\r\n  \"password\": \"Omkar1234*\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/login",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"1f-rfAixkGYZBMr11IBt1FTI7XHsyA\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "2a7ad5e5985177e2063ff89a791e37f3;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:10:21 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "31"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"User not registered\"\n}"
+						},
+						{
+							"name": "Missing Fields (Negative)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"sonalkajrolkar@neuronation.com\",\r\n  \"password\": \"     \"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/login",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"ac-KRfBd+PYKVjN0s2/gf/2pjVWvW4\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "8a751a7359d80d95e273f1e08027dca0;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:12:06 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "172"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQxMjMyNn0.Zjy6JnJwauEbfduG6MNLyfRaxUiMGzq0LdalQJ2UE0o\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Product Information",
+			"item": [
+				{
+					"name": "GET Products All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products",
+							"protocol": "https",
+							"host": [
+								"us-central1-nn-api-challenge",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Product By Exact Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products?name=Tastatür",
+							"protocol": "https",
+							"host": [
+								"us-central1-nn-api-challenge",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Tastatür"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET Product By Exact name=Legacy Device (URL Encoded Edge Case)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products?name=Legacy%20Device",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Legacy%20Device"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"38-FTDcxzTIH2BheZQju5UeNFJJ5+k\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "e361a9ae1be2bbf64637723f05a86c69;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 15:22:16 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "56"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 999,\n        \"name\": \"Legacy Device\",\n        \"price\": 0,\n        \"stock\": 99\n    }\n]"
+						},
+						{
+							"name": "GET Product By Exact Name=Laptop",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products?name=Laptop",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Laptop"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"31-qXKTft1/uLFKHw7MZA0O8/4VWwc\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "c0d4eff339d8edb4bf2993d5601a966e;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 15:31:14 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "49"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Laptop\",\n        \"price\": 1000,\n        \"stock\": 0\n    }\n]"
+						},
+						{
+							"name": "GET Product By Exact Name=Keyboard",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products?name=Keyboard",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Keyboard"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"32-RR7HB58gsbEQxWZUldtnYNqIxnA\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "ca50cf052e4f4ab7b4c6b13a0c0f0c13;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 15:35:06 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "50"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 2,\n        \"name\": \"Keyboard\",\n        \"price\": 50,\n        \"stock\": 10\n    }\n]"
+						},
+						{
+							"name": "GET Product By Exact Name=Mouse",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products?name=Mouse",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Mouse"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"2f-8zx7tV8mkuEL1Mgc1WgqJZY4mFA\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "119f321f174a07f285fe51051be2c698;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 15:37:27 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "47"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 3,\n        \"name\": \"Mouse\",\n        \"price\": 25,\n        \"stock\": -1\n    }\n]"
+						},
+						{
+							"name": "GET Product By Exact Name=Tastatür",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products?name=Tastatür",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Tastatür"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "05bb81d01df9b8edf1a03972057583bd;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 15:42:47 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "[]"
+						},
+						{
+							"name": "GET Product By Exact Name=Legacy Device",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products?name=Legacy Device",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Legacy Device"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"38-FTDcxzTIH2BheZQju5UeNFJJ5+k\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "446e4c4e06ac4d84ead88b27e0a66e13;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 15:43:59 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "56"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 999,\n        \"name\": \"Legacy Device\",\n        \"price\": 0,\n        \"stock\": 99\n    }\n]"
+						},
+						{
+							"name": "GET Product By Exact Name=legacy device (Case Sensitive)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products?name=legacy device",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "legacy device"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "04f1bce1dd468e2247e0ca626b0d21a2;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 19:57:35 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "[]"
+						}
+					]
+				},
+				{
+					"name": "GET Product By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products/9999 ",
+							"protocol": "https",
+							"host": [
+								"us-central1-nn-api-challenge",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"api",
+								"products",
+								"9999 "
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET Product By ID=999",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products/999",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products",
+										"999"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "text/html; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"c-ghCMv/+Srhv72FFxL2itcyRPdGg\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "164c0b75a318f02b0d88ef92901e9267;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 16:11:45 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "12"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "Server error"
+						},
+						{
+							"name": "GET Product By ID=4",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products/4",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products",
+										"4"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"42-MuvkhryD1l2YsNQbrUm4B2RDGNg\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "b580481caa1c224c6d314c0707858425;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 16:16:15 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "66"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 4,\n    \"name\": \"Tastatür\",\n    \"price\": 70,\n    \"stock\": 3,\n    \"isDetailed\": true\n}"
+						},
+						{
+							"name": "GET Product By ID=3",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products/3",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products",
+										"3"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"34-f8IKX706/W3tX+YMU7bevgp5v3w\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "835cfd5217d4b6f486d208796b5cbbf9;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 16:17:11 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "52"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 3,\n    \"name\": \"Mouse\",\n    \"stock\": -1,\n    \"isDetailed\": true\n}"
+						},
+						{
+							"name": "GET Product By ID=2",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products/2",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products",
+										"2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"87-bKpph9XguHRj1Q0iQgAjBpuJywU\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "c18e93a4810ab110d01db9fe0a30e0a1;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 16:19:44 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "135"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 2,\n    \"name\": \"Keyboard Pro\",\n    \"price\": 55,\n    \"stock\": 10,\n    \"isDetailed\": true,\n    \"description\": \"Upgraded mechanical keyboard with macro support.\"\n}"
+						},
+						{
+							"name": "GET Product By ID=1",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products/1",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"84-nYURdcR21MJvGGpA6r1/lRjfUDQ\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "f7694a9249f527225768fc4e83175ed2;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 16:20:58 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "132"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"name\": \"Laptop\",\n    \"price\": 1000,\n    \"stock\": 0,\n    \"isDetailed\": true,\n    \"description\": \"High-end gaming laptop with excellent performance.\"\n}"
+						},
+						{
+							"name": "GET Product By ID=0 (Edge Case)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products/0",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products",
+										"0"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "text/html; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"9-R1yEhnOj95+nePAcK9WnIdTEFwc\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "57c063978a45df6e64ccfc58f98cd185;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 16:24:10 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "9"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "Not found"
+						},
+						{
+							"name": "GET Product By ID=abc (Negative)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products/abc",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products",
+										"abc"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "text/html; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"9-R1yEhnOj95+nePAcK9WnIdTEFwc\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "3ae27d8a982b8593a60c87be7e7297a8;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 16:27:45 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "9"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "Not found"
+						},
+						{
+							"name": "GET Product By ID=9999 (Negative)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/products/9999 ",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"products",
+										"9999 "
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "text/html; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"9-R1yEhnOj95+nePAcK9WnIdTEFwc\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "abfd9ee7fa592cc158a082af5105b2f3;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 16:29:16 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "9"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "Not found"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Order Information",
+			"item": [
+				{
+					"name": "POST New Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"products\": [1, 2] }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+							"protocol": "https",
+							"host": [
+								"us-central1-nn-api-challenge",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "New Order for Valid Products [1,2]",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"products\": [1, 2] }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"5f-ztiM1esGmlOYB5FjjD5AEHDi42c\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "de84b809a9023e5353e9d16430ec1d74"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 14:49:35 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "95"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"1761403775776751\",\n    \"user\": \"sonalkajrolkar@neuronation.com\",\n    \"products\": [\n        1,\n        2\n    ],\n    \"total\": 1050\n}"
+						},
+						{
+							"name": "Invalid Product ID (Negative)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"products\": [9999] }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"5d-YQReWbRXbfKJFOvvVXz1IJE812o\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "97be7f1f2ad47ec04d209cc1c395f365;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:21:53 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "93"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"1761412913360193\",\n    \"user\": \"sonalkajrolkar@neuronation.com\",\n    \"products\": [\n        9999\n    ],\n    \"total\": 0\n}"
+						},
+						{
+							"name": "Empty Product Array (Negative)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"products\": [] }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"59-Nhz0D0GDpvrSGXbYFyFA8zFEDXU\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "284e7cdbd70f70490e77c18f9e34d240;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:24:21 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "89"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"1761413061776886\",\n    \"user\": \"sonalkajrolkar@neuronation.com\",\n    \"products\": [],\n    \"total\": 0\n}"
+						},
+						{
+							"name": "Duplicate Product IDs (Edge Case)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"products\": [1,1,2] }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"61-rz3jivIrd5ITFJDGttBvtyQQOIM\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "c4ac0c0e6b5852456d0cc9bd4a002f91;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:25:45 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "97"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"1761413145774206\",\n    \"user\": \"sonalkajrolkar@neuronation.com\",\n    \"products\": [\n        1,\n        1,\n        2\n    ],\n    \"total\": 2050\n}"
+						},
+						{
+							"name": "Large Product List (Edge Case)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"products\": [1,2,3,4,999] }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"67-PEKpPskAEyGamAmy3dcFpM51SQg\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "f4ae09474b622b4e591be63d280a8000;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:32:39 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "103"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"1761413559215922\",\n    \"user\": \"sonalkajrolkar@neuronation.com\",\n    \"products\": [\n        1,\n        2,\n        3,\n        4,\n        999\n    ],\n    \"total\": 1145\n}"
+						},
+						{
+							"name": "Unauthorized Invalid Token (Negative)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQxMjMyNn0.Zjy6JnJwauEbfduG6MNLyfRaxUiMGzq0LdalQJ2UE0o",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"products\": [1,2,3,4,999] }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"19-1luTU257I9tvKUXOJotGBQDVDqk\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "97db105d6f3f3c140979be86592dcc46"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:35:41 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "25"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Invalid token\"\n}"
+						}
+					]
+				},
+				{
+					"name": "GET Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+							"protocol": "https",
+							"host": [
+								"us-central1-nn-api-challenge",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET All Orders For Current User",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"ad-nlz3MqXlqIDYKcY0DYAYKxAoTcU\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "18879cf9fa643686a24dd2fd7337f9e2;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 14:55:54 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "173"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"1761403775776751\",\n        \"user\": \"sonalkajrolkar@neuronation.com\",\n        \"products\": [\n            1,\n            2\n        ],\n        \"total\": 1050\n    },\n    {\n        \"id\": \"1761404061110532\",\n        \"user\": \"sonalkajrolkar@neuronation.com\",\n        \"total\": 0\n    }\n]"
+						},
+						{
+							"name": "Valid token but user has no orders (Edge Case)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyMjNAbmV1cm9uYXRpb24uY29tIiwiaWF0IjoxNzYxNDE0NTEzfQ.NCOFY1gHW1tKwPC-atnHBIR3t3dLFnz582jcwy_m8Sg",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "c6556db7520bccc496e7f78fc2428644;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:48:54 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "[]"
+						},
+						{
+							"name": "Missing Token (Negative)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer ",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"19-1luTU257I9tvKUXOJotGBQDVDqk\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "da7608d7c6a6e3d2e7b88feafe8ea775;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:53:10 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "25"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Invalid token\"\n}"
+						},
+						{
+							"name": "Invalid Token (Negative)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer rerr",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"19-1luTU257I9tvKUXOJotGBQDVDqk\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "e86096d096a758724b3f9a957e9ef494"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 17:54:18 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "25"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Invalid token\"\n}"
+						}
+					]
+				},
+				{
+					"name": "GET Order",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders/1761416148386358",
+							"protocol": "https",
+							"host": [
+								"us-central1-nn-api-challenge",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1761416148386358"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET Order By ID=1761403775776751",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders/1761403775776751",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders",
+										"1761403775776751"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"5f-ztiM1esGmlOYB5FjjD5AEHDi42c\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "b4989e10ad3c7c0ed52b0c6739c88ffb;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 14:59:18 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "95"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"1761403775776751\",\n    \"user\": \"sonalkajrolkar@neuronation.com\",\n    \"products\": [\n        1,\n        2\n    ],\n    \"total\": 1050\n}"
+						},
+						{
+							"name": "GET Order By ID=9999 (Negative)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders/9999",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders",
+										"9999"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"1b-G7RX01EQFHhrsSpXHe3p7uxrQrs\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "212f2a03dcfd7594f179971cbae1def0;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 18:07:50 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "27"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Order not found\"\n}"
+						},
+						{
+							"name": "GET Order By ID=abcfe (Negative)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders/abcfe",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders",
+										"abcfe"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"4b-vk2FBtrthd6h2p7UIR9tTVLpMwo\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "2d4cae8cd41b3d32a17d7174708f92a4"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 18:11:17 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "75"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"99999999999\",\n    \"user\": \"shadow@qa.local\",\n    \"products\": [\n        1,\n        2\n    ],\n    \"total\": 1055\n}"
+						},
+						{
+							"name": "GET Order By ID=Other User’s Order (Negative)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbmFsa2Fqcm9sa2FyQG5ldXJvbmF0aW9uLmNvbSIsImlhdCI6MTc2MTQwMjgyMn0.n7Xv-m8eniXXpg5mEvRuGS5DRIs5pSF2Ayb0ym6U1ac",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://us-central1-nn-api-challenge.cloudfunctions.net/api/orders/1761416148386358",
+									"protocol": "https",
+									"host": [
+										"us-central1-nn-api-challenge",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"api",
+										"orders",
+										"1761416148386358"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "x-powered-by",
+									"value": "Express"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "etag",
+									"value": "W/\"67-+C/8xkVSKwF1JBvjPCxtyXJ3Cq4\""
+								},
+								{
+									"key": "x-cloud-trace-context",
+									"value": "7326aee5aa96fe5b138997032e428b33;o=1"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 25 Oct 2025 18:17:05 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "103"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"1761416148386358\",\n    \"user\": \"sonalkajrolkar@neuronation.com\",\n    \"products\": [\n        1,\n        2,\n        3,\n        4,\n        999\n    ],\n    \"total\": 1145\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
