@@ -1,6 +1,6 @@
-**QA Engineer Challenge – Manual & Automation**
+**QA Engineer Challenge – Manual & UI Automation and API Postman Testing**
 
-This README covers Part 1 (Manual test cases for Lieferando's new Restaurant filtering feature) and Part 2 (Automation test cases for Just Eat Takeaway Careers)
+This README covers Part 1 (Manual test cases for Lieferando's new Restaurant filtering feature) and Part 2 (Automation test cases for Just Eat Takeaway Careers) and API Testing for NeuroNation
 
 
 
